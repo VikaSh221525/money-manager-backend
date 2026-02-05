@@ -1,7 +1,7 @@
 import { verifyToken } from "../utils/jwt.js";
 import User from "../models/User.js";
 
-export const authenticate = async (req, res, next) => {
+export const authenticateToken = async (req, res, next) => {
     try {
         const token = req.cookies.token || req.header("Authorization")?.replace("Bearer ", "");
         
