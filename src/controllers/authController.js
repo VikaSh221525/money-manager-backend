@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import { generateToken } from "../utils/jwt.js";
 import bcryptjs from "bcryptjs";
+import { createDefaultCategories } from "./categoryController.js";
 
 // Sign up controller
 export const signup = async (req, res) => {
@@ -59,6 +60,9 @@ export const signup = async (req, res) => {
         // Create new user with hashed password
         const user = new User({ name, email, password: hashedPassword, profilePic: randomAvatar });
         await user.save();
+
+        // Create default categories for the new user
+        await createDefaultCategories(user._id);
 
         // Generate token
         const token = generateToken(user._id);

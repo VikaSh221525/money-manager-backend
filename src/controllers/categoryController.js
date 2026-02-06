@@ -245,3 +245,32 @@ export const getCategorySummary = async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
+
+// Initialize default categories for current user (utility endpoint)
+export const initializeDefaultCategories = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        // Check if user already has categories
+        const existingCategories = await Category.countDocuments({ user: userId });
+        
+        if (existingCategories > 0) {
+            return res.status(400).json({ 
+                message: "User already has categories",
+                count: existingCategories 
+            });
+        }
+
+        // Create default categories
+        const categories = await createDefaultCategories(userId);
+
+        res.status(201).json({
+            message: "Default categories created successfully",
+            count: categories.length,
+            categories
+        });
+    } catch (error) {
+        console.error("Initialize categories error:", error);
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};

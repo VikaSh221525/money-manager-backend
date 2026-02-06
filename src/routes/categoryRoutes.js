@@ -4,7 +4,8 @@ import {
     getCategories,
     updateCategory,
     deleteCategory,
-    getCategorySummary
+    getCategorySummary,
+    initializeDefaultCategories
 } from "../controllers/categoryController.js";
 import { authenticateToken } from "../middleware/auth.js";
 
@@ -17,6 +18,7 @@ router.use(authenticateToken);
 router.post("/", createCategory);
 router.get("/", getCategories);
 router.get("/summary", getCategorySummary);
+router.post("/initialize", initializeDefaultCategories); // Utility endpoint
 router.put("/:id", updateCategory);
 router.delete("/:id", deleteCategory);
 
