@@ -93,16 +93,16 @@ transactionSchema.index({ user: 1, division: 1, date: -1 });
 transactionSchema.index({ user: 1, account: 1, date: -1 });
 
 // Pre-save middleware to check if transaction is still editable
-transactionSchema.pre('save', function(next) {
-    if (!this.isNew) {
+transactionSchema.pre('save', async function() {
+    if (!this.isNew && this.createdAt) {
         const twelveHoursAgo = new Date(Date.now() - 12 * 60 * 60 * 1000);
         this.isEditable = this.createdAt > twelveHoursAgo;
     }
-    next();
 });
 
 // Virtual for checking if transaction can be edited
 transactionSchema.virtual('canEdit').get(function() {
+    if (!this.createdAt) return true;
     const twelveHoursAgo = new Date(Date.now() - 12 * 60 * 60 * 1000);
     return this.createdAt > twelveHoursAgo;
 });
